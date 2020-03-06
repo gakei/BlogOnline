@@ -24,12 +24,10 @@ public class UserService implements UserDetailsService {
                        UserMapper userMapper) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userMapper = userMapper;
-        /*save("gebilaowang", "gebilaowang");*/
     }
 
     public void save(String username, String password) {
         userMapper.save(username, bCryptPasswordEncoder.encode(password));
-        /*users.put(username, new User(1, username, bCryptPasswordEncoder.encode(password)));*/
     }
 
     public User getUserByUserName(String username) {
