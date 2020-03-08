@@ -13,7 +13,6 @@ import java.util.Collections;
 
 @Service
 public class UserService implements UserDetailsService {
-    /*private Map<String, User> users = new ConcurrentHashMap<>();*/
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserMapper userMapper;
 
