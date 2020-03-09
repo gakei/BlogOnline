@@ -1,7 +1,7 @@
 package com.github.hcsp.service;
 
 import com.github.hcsp.entity.User;
-import com.github.hcsp.mapper.UserMapper;
+import com.github.hcsp.dao.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

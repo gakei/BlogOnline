@@ -1,6 +1,7 @@
 package com.github.hcsp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.hcsp.service.AuthService;
 import com.github.hcsp.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,8 @@ class AuthControllerTest {
 
     @BeforeEach
     void setup() {
-        mvc = MockMvcBuilders.standaloneSetup(new AuthController(authenticationManager, userService)).build();
+        AuthService authService = new AuthService(userService);
+        mvc = MockMvcBuilders.standaloneSetup(new AuthController(authenticationManager, userService, authService)).build();
     }
 
     @Test

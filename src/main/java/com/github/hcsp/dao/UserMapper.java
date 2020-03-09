@@ -1,4 +1,4 @@
-package com.github.hcsp.mapper;
+package com.github.hcsp.dao;
 
 import com.github.hcsp.entity.User;
 import org.apache.ibatis.annotations.Insert;

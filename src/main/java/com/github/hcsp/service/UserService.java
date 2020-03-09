@@ -1,7 +1,7 @@
 package com.github.hcsp.service;
 
 import com.github.hcsp.entity.User;
-import com.github.hcsp.mapper.UserMapper;
+import com.github.hcsp.dao.UserMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

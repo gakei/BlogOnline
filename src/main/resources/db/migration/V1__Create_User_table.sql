@@ -4,8 +4,8 @@ create table user
 	username varchar(100) null,
 	encrypted_password varchar(100) null,
 	avatar varchar(100) null,
-	create_at datetime null,
-	update_at varchar(100) null,
+	created_at datetime null,
+	updated_at varchar(100) null,
 	constraint user_pk
 		primary key (id)
 );
