@@ -24,7 +24,9 @@ public class BlogService {
         try {
             List<Blog> blogs = blogDao.getBlogs(page, pageSize, userId, atIndex);
 
-            int count = blogDao.count(userId);
+            int unDisplayBlogsSize = blogs.size();
+
+            int count = blogDao.count(userId) - unDisplayBlogsSize;
 
             int pageCount = count % pageSize == 0 ? count / pageSize : count / pageSize + 1;
 
