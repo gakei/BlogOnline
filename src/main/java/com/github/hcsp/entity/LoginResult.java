@@ -1,15 +1,15 @@
 package com.github.hcsp.entity;
 
 public class LoginResult extends Result<User>{
-    boolean isLogin;
+    Boolean isLogin;
 
 
-    public LoginResult(ResultStatus status, String msg, User user, boolean isLogin) {
+    public LoginResult(ResultStatus status, String msg, User user, Boolean isLogin) {
         super(status, msg, user);
         this.isLogin = isLogin;
     }
 
-    public static LoginResult success(String msg, boolean isLogin) {
+    public static LoginResult success(String msg, Boolean isLogin) {
         return new LoginResult(ResultStatus.OK, msg, null, isLogin);
     }
 
@@ -25,7 +25,11 @@ public class LoginResult extends Result<User>{
         return new LoginResult(ResultStatus.OK, msg, user, true);
     }
 
-    public boolean isLogin() {
+    /*public Boolean getIsLogin() {
+        return isLogin;
+    }*/
+
+    public Boolean getIsLogin() {
         return isLogin;
     }
 }

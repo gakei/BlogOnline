@@ -1,15 +1,12 @@
 package com.github.hcsp.controller;
 
-import com.github.hcsp.entity.LoginResult;
-import com.github.hcsp.entity.Result;
-import com.github.hcsp.entity.User;
+import com.github.hcsp.entity.*;
 import com.github.hcsp.service.AuthService;
 import com.github.hcsp.service.UserService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -47,27 +44,27 @@ public class AuthController {
 
     @PostMapping("/auth/register")
     @ResponseBody
-    public LoginResult register(@RequestBody Map<String, String> usernameAndPassword) {
+    public Object register(@RequestBody Map<String, String> usernameAndPassword) {
         String username = usernameAndPassword.get("username");
         String password = usernameAndPassword.get("password");
         if (password.equals("") || username.equals("")) {
-            return LoginResult.failure("用户名或密码不能为空");
+            return RegisterAndLoginFailureOrLogoutStatus.failure("用户名或密码不能为空");
         }
         if (judgeInvalid(password)) {
-            return LoginResult.failure("invalid username/password");
+            return RegisterAndLoginFailureOrLogoutStatus.failure("invalid username/password");
         }
 
         if (judgeInvalid(username)) {
-            return LoginResult.failure("invalid username/password");
+            return RegisterAndLoginFailureOrLogoutStatus.failure("invalid username/password");
         }
 
         try {
             userService.save(username, password);
         }catch (DuplicateKeyException e) {
             e.printStackTrace();
-            return LoginResult.failure("用户名已经存在！");
+            return RegisterAndLoginFailureOrLogoutStatus.failure("用户名已经存在！");
         }
-        return LoginResult.success("注册成功", userService.getUserByUserName(username));
+        return RegisterAndLoginSuccess.success("注册成功", userService.getUserByUserName(username));
     }
 
     private boolean judgeInvalid(String data) {
@@ -76,16 +73,18 @@ public class AuthController {
 
     @GetMapping("/auth/logout")
     @ResponseBody
-    public LoginResult logout() {
-        SecurityContextHolder.clearContext();
-        return authService.getCurrentUser()
-                .map(user -> LoginResult.success("sucess", false))
-                .orElse(LoginResult.failure("用户没有登录"));
+    public Object logout() {
+        if (authService.getCurrentUser().isPresent()) {
+            SecurityContextHolder.clearContext();
+            return RegisterAndLoginFailureOrLogoutStatus.success("注销成功");
+        } else {
+            return RegisterAndLoginFailureOrLogoutStatus.failure("用户尚未登录");
+        }
     }
 
     @PostMapping("/auth/login")
     @ResponseBody
-    public LoginResult login(@RequestBody Map<String, String> usernameAndPassword) {
+    public Object login(@RequestBody Map<String, String> usernameAndPassword) {
         String username = usernameAndPassword.get("username");
         String password = usernameAndPassword.get("password");
 
@@ -93,15 +92,15 @@ public class AuthController {
         try{
             userDetails = userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
-            return LoginResult.failure("用户不存在");
+            return RegisterAndLoginFailureOrLogoutStatus.failure("用户不存在");
         }
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         try {
             authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(token);
-            return LoginResult.success("登录成功", userService.getUserByUserName(username));
+            return RegisterAndLoginSuccess.success("登录成功", userService.getUserByUserName(username));
         } catch (BadCredentialsException e) {
-            return LoginResult.failure("密码不正确");
+            return RegisterAndLoginFailureOrLogoutStatus.failure("密码不正确");
         }
     }
 }
