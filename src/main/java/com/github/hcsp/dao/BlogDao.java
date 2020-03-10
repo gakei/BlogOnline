@@ -18,10 +18,11 @@ public class BlogDao {
         this.sqlSession = sqlSession;
     }
 
-    public List<Blog> getBlogs(Integer page, Integer pageSize, Integer userId) {
+    public List<Blog> getBlogs(Integer page, Integer pageSize, Integer userId, boolean atIndex) {
         Map<String, Object> parameters = asMap("userId", userId,
                 "offset", (page - 1) * pageSize,
-                "limit", pageSize);
+                "limit", pageSize,
+                "atIndex", atIndex);
         return sqlSession.selectList("selectBlog", parameters);
     }
 

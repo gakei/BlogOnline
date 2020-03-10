@@ -17,7 +17,7 @@ public class BlogServiceTest {
 
     @Test
     public void getBlogsFromDb() {
-        blogService.getBlogs(1, 10, null);
-        Mockito.verify(blogDao).getBlogs(1, 10, null);
+        blogService.getBlogs(1, 10, null, true);
+        Mockito.verify(blogDao).getBlogs(1, 10, null, true);
     }
 }
