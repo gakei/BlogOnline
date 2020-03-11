@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Controller
 @ResponseBody
@@ -47,15 +48,22 @@ public class AuthController {
     public Object register(@RequestBody Map<String, String> usernameAndPassword) {
         String username = usernameAndPassword.get("username");
         String password = usernameAndPassword.get("password");
-        if (password.equals("") || username.equals("")) {
-            return RegisterAndLoginFailureOrLogoutStatus.failure("用户名或密码不能为空");
-        }
-        if (judgeInvalid(password)) {
-            return RegisterAndLoginFailureOrLogoutStatus.failure("invalid username/password");
+        String pattern = "\\w+";
+
+        if (!Pattern.matches(pattern, username)) {
+            return RegisterAndLoginFailureOrLogoutStatus.failure("必须以字母/数字/下划线开头");
         }
 
-        if (judgeInvalid(username)) {
-            return RegisterAndLoginFailureOrLogoutStatus.failure("invalid username/password");
+        if (password == null || username == null) {
+            return RegisterAndLoginFailureOrLogoutStatus.failure("用户名或密码不能为空");
+        }
+
+        if (username.length() < 2 || username.length() > 8) {
+            return RegisterAndLoginFailureOrLogoutStatus.failure("用户名应为2-8个数字/字母");
+        }
+
+        if (password.length() < 6 || password.length() > 15) {
+            return RegisterAndLoginFailureOrLogoutStatus.failure("密码长度应该在0-15之间");
         }
 
         try {
@@ -64,6 +72,7 @@ public class AuthController {
             e.printStackTrace();
             return RegisterAndLoginFailureOrLogoutStatus.failure("用户名已经存在！");
         }
+        login(usernameAndPassword);
         return RegisterAndLoginSuccess.success("注册成功", userService.getUserByUserName(username));
     }
 

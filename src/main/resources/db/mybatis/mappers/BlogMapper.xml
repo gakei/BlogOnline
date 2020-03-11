@@ -20,11 +20,14 @@
         FROM blog
         LEFT OUTER JOIN user
         ON blog.user_id = user.id
-        where
-        <if test="user_id != null">
-            blog.user_id = #{user_id} and
-        </if>
-        blog.at_index = #{atIndex}
+        <choose>
+            <when test="userId != null">
+                where blog.user_id = #{userId}
+            </when>
+            <otherwise>
+                where blog.at_index = #{atIndex}
+            </otherwise>
+        </choose>
         order by blog.updated_at desc
         limit ${offset}, #{limit}
     </select>
